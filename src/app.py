@@ -70,7 +70,7 @@ async def get_students():
 async def get_student(student_id: str):
     query = f"SELECT * FROM students WHERE id = {student_id}"
     result = select_query(query)
-    
+
     html_table = json2html.convert(json=result)
 
     return HTMLResponse(content=html_table, status_code=200)
