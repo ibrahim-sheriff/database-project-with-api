@@ -44,3 +44,12 @@ def select_query(query: str):
         print(ex)
 
     return return_list
+
+
+def insert_update_query(query: str, params: dict):
+    try:
+        with engine.begin() as conn:
+            conn.execute(db.text(query), params)
+
+    except Exception as ex:
+        print(ex)
