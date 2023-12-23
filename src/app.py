@@ -5,7 +5,8 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from json2html import json2html
 
-from database import create_tables, select_query
+from database import create_tables, insert_update_query, select_query
+from schemas import Student
 
 
 @asynccontextmanager
@@ -73,6 +74,43 @@ async def get_student(student_id: str):
     html_table = json2html.convert(json=result)
 
     return HTMLResponse(content=html_table, status_code=200)
+
+
+# @app.post("/students")
+# async def create_student(id: int, first_name: str, last_name: str, phone: str = None, date_of_birth: date = None, address: str = None): # noqa
+#     print(id, first_name, last_name, phone, date_of_birth, address)
+
+
+@app.post("/students")
+async def create_student(student: Student):
+    query = """
+        INSERT INTO students (
+            id, first_name, last_name, phone, date_of_birth, address
+        )
+        VALUES (:id, :first_name, :last_name, :phone, :date_of_birth, :address)
+    """
+    params = student.model_dump()
+    insert_update_query(query, params)
+
+
+@app.put("/students/{student_id}")
+async def update_student(student_id: int, student: Student):
+    query = """
+        UPDATE students
+        SET
+            first_name = :first_name,
+            last_name = :last_name,
+            phone = :phone,
+            date_of_birth = :date_of_birth,
+            address = :address
+        WHERE id = :student_id
+    """
+
+    params = student.model_dump()
+    params.pop("id")
+    params["student_id"] = student_id
+
+    insert_update_query(query, params)
 
 
 @app.get("/sections")
