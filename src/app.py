@@ -2,8 +2,6 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from json2html import json2html
 
 from database import create_tables, insert_update_query, select_query
 from schemas import Student
@@ -41,9 +39,7 @@ async def get_courses():
     query = "SELECT * FROM courses"
     result = select_query(query)
 
-    html_table = json2html.convert(json=result)
-
-    return HTMLResponse(content=html_table, status_code=200)
+    return result
 
 
 @app.get("/courses/{course_id}")
@@ -51,9 +47,7 @@ async def get_course(course_id):
     query = f"SELECT * FROM courses WHERE id = {course_id}"
     result = select_query(query)
 
-    html_table = json2html.convert(json=result)
-
-    return HTMLResponse(content=html_table, status_code=200)
+    return result
 
 
 @app.get("/students")
@@ -61,9 +55,7 @@ async def get_students():
     query = "SELECT * FROM students"
     result = select_query(query)
 
-    html_table = json2html.convert(json=result)
-
-    return HTMLResponse(content=html_table, status_code=200)
+    return result
 
 
 @app.get("/students/{student_id}")
@@ -71,9 +63,7 @@ async def get_student(student_id: str):
     query = f"SELECT * FROM students WHERE id = {student_id}"
     result = select_query(query)
 
-    html_table = json2html.convert(json=result)
-
-    return HTMLResponse(content=html_table, status_code=200)
+    return result
 
 
 # @app.post("/students")
@@ -131,6 +121,4 @@ async def get_sections():
     """
     result = select_query(query)
 
-    html_table = json2html.convert(json=result)
-
-    return HTMLResponse(content=html_table, status_code=200)
+    return result
